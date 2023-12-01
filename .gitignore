@@ -1,0 +1,14 @@
+# We are typescript, this is compiled
+*.js
+
+# bin
+node_modules
+
+# editors
+.idea
+*.iml
+*.swp
+
+# no need to check these in
+inputs/
+outputs/
