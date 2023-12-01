@@ -24,43 +24,28 @@ switch (command) {
 
 function sumCalibration(path: PathLike) {
     const lines = readLines(path);
-    function twoDigit(line: string): number {
-        const digitWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-        const digits = [];
-        const chars = line.split("");
-        let left = 0;
-        let right = 1;
-        while (right <= chars.length) {
-            const substr = chars.slice(left, right).join("");
-            // Special case for digits
-            if (substr.length == 1) {
-                const int = Number.parseInt(substr)
-                if (Number.isInteger(int)) {
-                    digits.push(int);
-                    left = right;
-                    continue;
-                }
-            }
-
-            const candidate = digitWords.findIndex(w => w.startsWith(substr));
-            if (candidate !== -1) {
-                if (substr === digitWords[candidate]) {
-                    digits.push(candidate+1);
-                    left++;
-                } else {
-                    right++;
-                }
-            } else {
-                left++;
-            }
-
-            if (left === right) {
-                right++;
-            }
+    const digitWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    function reverse(s: string) : string {
+        return s.split("").reverse().join("");
+    }
+    function digitOrDigitWordToDigitString(digit: string) : string {
+        if (Number.isInteger(Number.parseInt(digit))) {
+            return digit;
         }
-
-        console.log(JSON.stringify(digits));
-        return Number.parseInt(`${digits.at(0)}${digits.at(-1)}`)
+        return `${digitWords.indexOf(digit) + 1}`;
+    }
+    function twoDigit(line: string): number {
+        const pattern = RegExp(`(\\d|${digitWords.join("|")})`)
+        const revPattern = RegExp(`(\\d|${digitWords.map(x => x.split("").reverse().join("")).join("|")})`)
+        const firstDigitString = pattern.exec(line);
+        const lastDigitString = revPattern.exec(reverse(line));
+        if (!firstDigitString || !lastDigitString) {
+            throw new Error(`Regex must always match ${line}`);
+        }
+        const firstDigit = digitOrDigitWordToDigitString(firstDigitString[1]);
+        const lastDigit = digitOrDigitWordToDigitString(reverse(lastDigitString[1]));
+        console.log([firstDigit, lastDigit]);
+        return Number.parseInt(`${firstDigit}${lastDigit}`)
     }
     console.log(lines.map(twoDigit).reduce((a,b) => a+b, 0));
 }
