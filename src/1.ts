@@ -2,7 +2,6 @@ import {readLines} from "./util/readFile";
 import {hideBin} from "yargs/helpers";
 import yargs from "yargs";
 import {PathLike} from "node:fs";
-import {read} from "fs";
 
 const argv = yargs(hideBin(process.argv))
     .command('sum-calibration <input>', "Sums the two digit numbers made by the first and last digit of each line")
