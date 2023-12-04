@@ -68,9 +68,7 @@ function game(line: string) : Game {
 
 function possibleGames(path: string) {
     const total = readLines(path).map(game)
-        .filter(({red, blue, green}) => {
-        return red <= 12 && green <= 13 && blue <= 14;
-    }).map(({id}) => id)
+        .map(({red, blue, green}) => red * blue * green)
         .reduce((a,b) => a+b, 0);
 
     console.log(total);
